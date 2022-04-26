@@ -50,7 +50,10 @@ def main():
         start = time.time()
         print("Getting length information from genome sequences", flush=True)
         seqs_info = get_all_seqs(in_bam)
-        seqs_info_sliced = sort_sequences(seqs_info, args.maxNumSeqs)
+        if args.maxNumSeqs:
+            seqs_info_sliced = sort_sequences(seqs_info, args.maxNumSeqs)
+        else:
+            seqs_info_sliced = sort_sequences(seqs_info, len(seqs_info))
         end = time.time()
         elapsed_time = end - start
         print(f"Elapsed time: {elapsed_time}", flush=True)
