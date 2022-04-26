@@ -13,17 +13,24 @@ from seq_parser import get_all_seqs
 from sort_sequences import sort_sequences, retrieve_sequences
 from merge_images import merge_images
 
-def plot_coverage(depth_file, out_filename, seq_ID, winSize):
+def plot_coverage(depth_file, out_filename, seq_ID, winSize, ylim=None):
 
   df = pd.read_csv(depth_file, sep="\t", names=['sequence', 'start', 'end', 'depth'])  
   df1 = df.astype({'start': 'int', 'end': 'int', 'depth': 'float'})
 
   df1['position'] = df1['start'] + (df1['end'] - df1['start'])/2
   df2 = df1.astype({'position': 'object'})
-    
+  
+  if not ylim:
+      # set coverage limit as the 90% quantile
+      ylim = df2['depth'].quantile(0.9)
+      print(f"default ylim is {ylim}", flush=True)
+      #ylim = df2['depth'].quantile(0.9)
+  
   fig, ax = plt.subplots(1,1)
   ax.bar(x=df2['position'], height=df2['depth'], width=winSize)
   ax.set_title(seq_ID)
+  ax.set_ylim(top=ylim)  
 
   plt.savefig(out_filename)
 
@@ -40,6 +47,7 @@ def main():
     optional.add_argument('--winSize', help='Windows size')
     optional.add_argument('--img', help='List of images to concatenate')
     optional.add_argument('--depth', help='Depth file to use as input for generating plot')
+    optional.add_argument('--covLim', help='Coverage limit to be displayed at the y axis', type=int)
     args = parser.parse_args()
     
     if args.bam:
@@ -92,7 +100,10 @@ def main():
           print(f"Creating coverage plot for {seq_ID}", flush=True)
           out_plot_filename = f"{seq_ID}.coverage.png"
           seqs_plots.append(out_plot_filename)
-          plot_coverage(depth_per_windows, out_plot_filename, seq_ID, int(args.winSize))
+          if args.covLim:
+              plot_coverage(depth_per_windows, out_plot_filename, seq_ID, int(args.winSize), args.covLim)
+          else:
+              plot_coverage(depth_per_windows, out_plot_filename, seq_ID, int(args.winSize))
           end = time.time()
           elapsed_time = end - start
           print(f"Elapsed time: {elapsed_time}", flush=True)
