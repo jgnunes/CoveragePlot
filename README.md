@@ -10,7 +10,8 @@ Python3 (tested with v3.8.1)
 Samtools (tested with v1.9)
 Bedtools (tested with v2.30.0)
 
-# Running  
+# Running 
+``` 
 usage: plot_coverage.py [-h] [--maxNumSeqs MAXNUMSEQS | --seqs SEQS] [--bam BAM] [--winSize WINSIZE] [--img IMG] [--depth DEPTH] [--covLim COVLIM]
 
 required arguments:
@@ -23,3 +24,4 @@ optional arguments:
   --img IMG                  List of images to concatenate
   --depth DEPTH              Depth file to use as input for generating plot
   --covLim COVLIM            Coverage limit to be displayed at the y axis (default=90% coverage quartile)
+```
