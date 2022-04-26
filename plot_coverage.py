@@ -24,8 +24,6 @@ def plot_coverage(depth_file, out_filename, seq_ID, winSize, ylim=None):
   if not ylim:
       # set coverage limit as the 90% quantile
       ylim = df2['depth'].quantile(0.9)
-      print(f"default ylim is {ylim}", flush=True)
-      #ylim = df2['depth'].quantile(0.9)
   
   fig, ax = plt.subplots(1,1)
   ax.bar(x=df2['position'], height=df2['depth'], width=winSize)
@@ -44,7 +42,7 @@ def main():
     mutually_exclusive_group.add_argument('--maxNumSeqs', help='Maximum number of sequences')
     mutually_exclusive_group.add_argument('--seqs', help='List of sequences to be used')
     required.add_argument('--bam', help='BAM mapping file')
-    optional.add_argument('--winSize', help='Windows size')
+    optional.add_argument('--winSize', help='Windows size', default=10000, type=int)
     optional.add_argument('--img', help='List of images to concatenate')
     optional.add_argument('--depth', help='Depth file to use as input for generating plot')
     optional.add_argument('--covLim', help='Coverage limit to be displayed at the y axis', type=int)
@@ -101,9 +99,9 @@ def main():
           out_plot_filename = f"{seq_ID}.coverage.png"
           seqs_plots.append(out_plot_filename)
           if args.covLim:
-              plot_coverage(depth_per_windows, out_plot_filename, seq_ID, int(args.winSize), args.covLim)
+              plot_coverage(depth_per_windows, out_plot_filename, seq_ID, args.winSize, args.covLim)
           else:
-              plot_coverage(depth_per_windows, out_plot_filename, seq_ID, int(args.winSize))
+              plot_coverage(depth_per_windows, out_plot_filename, seq_ID, args.winSize)
           end = time.time()
           elapsed_time = end - start
           print(f"Elapsed time: {elapsed_time}", flush=True)
@@ -115,7 +113,7 @@ def main():
     if args.depth:
         depth_filename = args.depth
         out_filename = f"{depth_filename}.png"
-        plot_coverage(depth_filename, out_filename, "coverage plot", int(args.winSize))
+        plot_coverage(depth_filename, out_filename, "coverage plot", args.winSize)
 
     if args.img:
         images = args.img.split()

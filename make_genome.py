@@ -2,7 +2,6 @@ import sys
 import subprocess
 
 def make_genome_file(in_bam, target_seq):
-    print(f"Creating genome file and saving it as {target_seq}.genome.txt")
     samtools_cmd = ['samtools', 'view', '-h', in_bam]
     proc = subprocess.Popen(samtools_cmd, stdout=subprocess.PIPE)
     for bytes_line in proc.stdout:
@@ -18,7 +17,7 @@ def make_genome_file(in_bam, target_seq):
                     break
     return (f"{target_seq}.genome.txt", seq_len)
 
-def make_genome_windows(genome_file, win_size=10000):
+def make_genome_windows(genome_file, win_size):
     bedtools_cmd = ['bedtools', 'makewindows', '-g', genome_file, '-w', str(win_size)]
     windows_filename = genome_file.replace(".txt", f"{win_size}.txt")
     print(f"Creating windows genome file and saving it as {windows_filename}")
