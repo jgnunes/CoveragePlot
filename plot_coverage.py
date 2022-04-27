@@ -1,14 +1,9 @@
 import time
 import argparse
-import os
 import pandas as pd
 import matplotlib.pyplot as plt
-import shutil
-from windows_depth import get_windows_depths, windows_to_base, windows_to_base_df
-from split_bam import split_bam
-from get_depth import get_depth, get_windows_depth
-from covered_seqs import get_covered_seqs
-from make_genome import make_genome_file, make_genome_windows
+from get_depth import get_windows_depth
+from make_genome import make_genome_windows
 from seq_parser import get_all_seqs
 from sort_sequences import sort_sequences, retrieve_sequences
 from merge_images import merge_images
